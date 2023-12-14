@@ -1,7 +1,5 @@
 # Organizing-Relief
 
-MVP for our Senior Design Class
-
 Instructions for Setting Up Dependencies:
 
 1. Framework: The framework used is TurboGears2, to install dependencies:
