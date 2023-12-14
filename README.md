@@ -1,6 +1,5 @@
 # Organizing-Relief
 
-# OrganizingReliefMVP
 MVP for our Senior Design Class
 
 Instructions for Setting Up Dependencies:
