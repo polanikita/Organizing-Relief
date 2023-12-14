@@ -1,0 +1,868 @@
+from wsgiref.simple_server import make_server
+from tg import response
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
+from setUp.myTables import EmergencyCall, MunicipalityUrgency, engine
+from setUp.municipalities import municipalities
+from setUp.urgencyRatingWeights import num_call_weight, urg_weight, stat_weight, max_calls
+from setUp.config import config
+
+<<<<<<< HEAD
+import socket
+import selectors 
+
+import subprocess
+
+municipalities = [
+    "Adjuntas",
+    "Aguada",
+    "Aguadilla",
+    "Aguas Buenas",
+    "Aibonito",
+    "Añasco",
+    "Arecibo",
+    "Arroyo",
+    "Barceloneta",
+    "Barranquitas",
+    "Bayamón",
+    "Cabo Rojo",
+    "Caguas",
+    "Camuy",
+    "Canóvanas",
+    "Carolina",
+    "Cataño",
+    "Cayey",
+    "Ceiba",
+    "Ciales",
+    "Cidra",
+    "Coamo",
+    "Comerío",
+    "Corozal",
+    "Culebra",
+    "Dorado",
+    "Fajardo",
+    "Florida",
+    "Guánica",
+    "Guayama",
+    "Guayanilla",
+    "Guaynabo",
+    "Gurabo",
+    "Hatillo",
+    "Hormigueros",
+    "Humacao",
+    "Isabela",
+    "Jayuya",
+    "Juana Díaz",
+    "Juncos",
+    "Lajas",
+    "Lares",
+    "Las Marías",
+    "Las Piedras",
+    "Loíza",
+    "Luquillo",
+    "Manatí",
+    "Maricao",
+    "Maunabo",
+    "Mayagüez",
+    "Moca",
+    "Morovis",
+    "Naguabo",
+    "Naranjito",
+    "Orocovis",
+    "Patillas",
+    "Peñuelas",
+    "Ponce",
+    "Quebradillas",
+    "Rincón",
+    "Río Grande",
+    "Sabana Grande",
+    "Salinas",
+    "San Germán",
+    "San Juan",
+    "San Lorenzo",
+    "San Sebastián",
+    "Santa Isabel",
+    "Toa Alta",
+    "Toa Baja",
+    "Trujillo Alto",
+    "Utuado",
+    "Vega Alta",
+    "Vega Baja",
+    "Vieques",
+    "Villalba",
+    "Yabucoa",
+    "Yauco"
+]
+Base = declarative_base()
+
+
+
+class Orgs(Base):
+    __tablename__ = 'organizations'
+    orgName = Column(String, primary_key=True)
+    orgPin = Column(Integer, nullable=False)
+
+class User(Base):
+    __tablename__ = 'newUsers___'
+    email = Column(String, primary_key=True)
+    children = relationship("EmergencyCall", back_populates="parent")
+    children2 = relationship("Chats", back_populates="parent")
+    name = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    orgName = Column(String, nullable=False)
+
+class EmergencyCall(Base):
+    __tablename__ = 'newEmergencyCalls_________'
+    callId = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    urgency = Column(Integer, nullable=False)
+    emergencyDescription = Column(String, nullable=False)
+    municipality = Column(String, nullable=False)
+    extendedLocationInfo = Column(String, nullable=True)
+    date_time_called = Column(DateTime, nullable=False)
+    user_email = Column(String, ForeignKey('newUsers___.email'))
+    parent = relationship("User", back_populates="children")
+    status = Column(String, nullable=False)
+    lastUpdated = Column(DateTime, nullable=False)
+    responses = relationship("EmergencyCallsResponses", back_populates='parent_call')
+
+class EmergencyCallsResponses(Base):
+    __tablename__ = 'emergencyCallsResponses__________'
+    resId = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    callId = Column(UUID(as_uuid=True), ForeignKey("newEmergencyCalls_________.callId"), nullable=False)
+    date_time_responded = Column(DateTime, nullable=False)
+    urgency = Column(Integer, nullable=False)
+    resolution = Column(String, nullable=False)
+    emergencyDescription = Column(String, nullable=False)
+    location = Column(String, nullable=False)
+    messageToCaller = Column(String, nullable=False)
+    damages = Column(String, nullable=True)
+    resources = Column(String, nullable=True)
+    colabOrg = Column(String, nullable=True)
+    parent_call = relationship("EmergencyCall", back_populates="responses")
+
+class Hubs(Base):
+    __tablename__ = 'aidHub'
+    mainProvider = Column(String, ForeignKey('newUsers___.email'), primary_key=True)
+    municipality = Column(String, nullable=False)
+    zipcode = Column(String, nullable=False)
+    city = Column(String, nullable=False)
+    streetAddr = Column(String, nullable=False)
+    aidDescription = Column(String, nullable=False)
+    currCapacity = Column(Integer, nullable=True)
+
+class MunicipalityUrgency(Base):
+    __tablename__ = 'municipalityUrgency'
+    municipality = Column(String, primary_key=True)
+    urgency_rating = Column(Float, nullable=False)
+
+class Chats(Base):
+    __tablename__ = 'chats'
+    chat = Column(String, nullable=False)
+    resId = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_email = Column(String, ForeignKey('newUsers___.email'))
+    parent = relationship("User", back_populates="children2")
+    date_time = Column(DateTime, nullable=False)
+
+
+
+db_url = 'postgresql://postgres:WeAreOrganizerOfReliefs3519!@localhost:5433/OrganizingReliefSignUp'
+engine = create_engine(db_url)
+Base.metadata.create_all(bind=engine)
+# RootController of our web app, in charge of serving content for /
+
+
+##Witghting for each part of the urgency rating
+num_call_weight = .6
+urg_weight =.2
+stat_weight = .2
+max_calls = 10
+
+
+            
+#Root Controller
+class RootController(TGController):
+    @expose("pages/homePage.xhtml")
+    def index(self):
+        return dict(page='homePage') 
+    
+    @expose("pages/citizenHome.xhtml")
+    def citizenHomePage(self, municipality=None, description=None, location=None, urgency=None):
+        
+        name = session['name']
+        email = session['email']
+        Session = sessionmaker(bind=engine)
+        dbsession = Session()
+        calls = session['calls']
+        error_message = ''
+        #if form submitted
+        if location and municipality and description and urgency:
+            permanent_list = []
+            if municipality not in municipalities:
+                return dict(page='citizenHome', civilian_name=name, error_message ="Form Submision failed! Enter a Municipality in Puerto Rico", calls=permanent_list)
+            Session = sessionmaker(bind=engine)
+            dbsession = Session()
+
+            now = datetime.now()
+            emergency_call = EmergencyCall(
+                urgency=urgency,
+                emergencyDescription=description,
+                municipality=municipality,
+                extendedLocationInfo =location,                
+                date_time_called=now,
+                lastUpdated = now,
+                user_email = email,
+                status = 'Not seen'
+            )
+            dbsession.add(emergency_call)
+            dbsession.commit()
+            curMun = dbsession.query(MunicipalityUrgency).filter_by(municipality=municipality).first()
+            stat_norm = 0
+            if emergency_call.status == "Arrived":
+                stat_norm += 1/4
+            elif emergency_call.status == "Seen":
+                stat_norm += 2/4
+            elif emergency_call.status == "Not seen":
+                stat_norm += 3/4
+            elif emergency_call.status == "NeedHelp":
+                stat_norm += 3/4
+            elif emergency_call.status == 'NeedCriticalHelp':
+                stat_norm += 1
+
+            curMun.urgency_rating += (1/max_calls)*(num_call_weight) + (emergency_call.urgency/4)* (urg_weight)+ (stat_norm)*(stat_weight)
+            dbsession.commit()
+            date_time = now.strftime("%m/%d/%Y - %H:%M")
+            error_message = 'Form successfully submitted: ' + date_time
+            currUser = dbsession.query(User).filter_by(email=email).first()
+            calls = currUser.children 
+            session['calls']= calls
+            for call in calls:
+                temp_list  = []
+                temp_list.append((call.date_time_called.strftime("%m/%d/%Y - %H:%M")))
+                temp_list.append(call.emergencyDescription)
+                temp_list.append(call.municipality)
+                temp_list.append(call.extendedLocationInfo)
+                temp_list.append(call.status)
+                temp_list.append(call.callId)
+                permanent_list.append(temp_list)
+            dbsession.close()
+            return dict(page='citizenHome', civilian_name=name, error_message =error_message, calls=permanent_list)
+        dbsession.close()
+        if location or municipality or description or urgency:
+            error_message = "Fill out all fields. Try again!"
+        #else if just loading in home page
+
+        permanent_list = []
+        for call in calls:
+            temp_list  = []
+            temp_list.append((call.date_time_called.strftime("%m/%d/%Y - %H:%M")))
+            temp_list.append(call.emergencyDescription)
+            temp_list.append(call.municipality)
+            temp_list.append(call.extendedLocationInfo)
+            temp_list.append(call.status)
+            temp_list.append(call.callId)
+            permanent_list.append(temp_list)
+        return dict(page='citizenHome', civilian_name = name, error_message =error_message, calls=permanent_list)
+
+
+    @expose("pages/citizenSignUpPage.xhtml")
+    def citizenSignUpPage(self, name=None, email=None, password=None, confirmPassword=None):
+        error_message = ''
+        if name and email and password == confirmPassword:
+            try:
+                new_user = User(email=email, name=name, password=password, orgName='None')
+                Session = sessionmaker(bind=engine)
+                dbsession = Session()
+                dbsession.add(new_user)
+                dbsession.commit()
+                session['name'] = new_user.name
+                session['email'] = new_user.email
+                session['calls'] = []
+                session.save()
+                dbsession.close()
+                return redirect("/citizenHomePage")
+            except IntegrityError as a:
+                error_message = "Email is already in use. Please choose a different email."
+                return dict(page='citizenSignUpPage', error_message=error_message)
+        else:
+            if (password != confirmPassword):
+                error_message = 'Passwords do not match. Try again!'
+            elif(name or email or password or confirmPassword):
+                error_message = "Fill out all fields. Try again!"
+            return dict(page='citizenSignUpPage', error_message=error_message)
+        
+    
+    @expose("pages/providerHome.xhtml")
+    def providerHomePage(self, municipality=None, description=None, location=None, urgency=None, chatSubmit=None, send=None):
+        name = session['name']
+        email = session['email']
+        calls = session['calls']
+
+        Session = sessionmaker(bind=engine)
+        dbsession = Session()
+        chats = dbsession.query(Chats)
+        chatlist = chats #need to reverse?
+        dbsession.expunge_all()
+        error_message = ''
+        if chatSubmit and send:
+            permanent_list = []
+            Session = sessionmaker(bind=engine)
+            dbsession = Session()
+            now = datetime.now()
+            new_chat = Chats(chat=chatSubmit, user_email = email, date_time = now)
+            dbsession.add(new_chat)
+            dbsession.commit()
+            return dict(page='providerHome', civilian_name=name, error_message =error_message, calls=permanent_list, chats=chatlist, user_email=email)
+
+        if location and municipality and description and urgency:
+            permanent_list = []
+            if municipality not in municipalities:
+                return dict(page='providerHome', civilian_name=name, error_message ="Form Submision failed! Enter a Municipality in Puerto Rico", calls=permanent_list, chats=chatlist, user_email=email)
+            Session = sessionmaker(bind=engine)
+            dbsession = Session()
+            currUser = dbsession.query(User).filter_by(email=email).first()
+
+            now = datetime.now()
+            emergency_call = EmergencyCall(
+                urgency=urgency,
+                emergencyDescription=description,
+                municipality=municipality,
+                extendedLocationInfo =location,                
+                date_time_called=now,
+                lastUpdated = now,
+                user_email = email,
+                status = 'Not seen',
+            )
+            dbsession.add(emergency_call)
+            dbsession.commit()
+
+            curMun = dbsession.query(MunicipalityUrgency).filter_by(municipality=municipality).first()
+            stat_norm = 0
+            if emergency_call.status == "Arrived":
+                stat_norm += 1/4
+            elif emergency_call.status == "Seen":
+                stat_norm += 2/4
+            elif emergency_call.status == "Not seen":
+                stat_norm += 3/4
+            elif emergency_call.status == "NeedHelp":
+                stat_norm += 3/4
+            elif emergency_call.status == 'NeedCriticalHelp':
+                stat_norm += 1
+            curMun.urgency_rating += (1/max_calls)*(num_call_weight) + (emergency_call.urgency/4)*(urg_weight)+ (stat_norm)*(stat_weight)
+            dbsession.commit()
+
+            date_time = now.strftime("%m/%d/%Y - %H:%M")
+            error_message = 'Form successfully submitted: ' + date_time
+            calls = currUser.children 
+            session['calls']= calls
+            permanent_list = []
+            for call in calls:
+                temp_list  = []
+                temp_list.append((call.date_time_called.strftime("%m/%d/%Y - %H:%M")))
+                temp_list.append(call.emergencyDescription)
+                temp_list.append(call.municipality)
+                temp_list.append(call.extendedLocationInfo)
+                temp_list.append(call.status)
+                permanent_list.append(temp_list)
+            dbsession.close()
+            return dict(page='providerHome', civilian_name=name, error_message =error_message, calls=permanent_list, chats=chatlist, user_email = email)
+        elif location or municipality or description or urgency:
+            error_message = "Fill out all fields. Try again!"
+        permanent_list = []
+        for call in calls:
+            temp_list  = []
+            temp_list.append((call.date_time_called.strftime("%m/%d/%Y - %H:%M")))
+            temp_list.append(call.emergencyDescription)
+            temp_list.append(call.municipality)
+            temp_list.append(call.extendedLocationInfo)
+            temp_list.append(call.status)
+            permanent_list.append(temp_list)
+        redirect_url = url('/providerHomePage') + f'?municipality={municipality}&description={description}&location={location}&urgency={urgency}'
+        redirect(redirect_url)
+        return dict(page='providerHome',civilian_name = name, error_message =error_message, calls=permanent_list, chats=chatlist, user_email= email)
+
+    @expose("pages/providerSignUpPage.xhtml")
+    def providerSignup(self, name=None, orgEmail=None, orgID=None, password=None, confirmPassword=None, orgName= None):
+        error_message = ''
+        check = 0
+        if name and orgEmail and orgID and orgName and password == confirmPassword:
+            try:
+                new_user = User(email=orgEmail, name=name, password=password, orgName=orgName)
+                Session = sessionmaker(bind=engine)
+                dbsession = Session()
+                organization = dbsession.query(Orgs).filter_by(orgName=orgName).first()
+                if not organization:
+                    raise ValueError
+                check += 1
+                if int(orgID) == int(organization.orgPin):
+                    check +=1
+                    dbsession.add(new_user)
+                    dbsession.commit()
+                    session['name'] = new_user.name
+                    session['email'] = new_user.email
+                    session['orgName'] = orgName
+                    session['calls'] = []
+                    session.save()
+                    dbsession.close()
+                    # Optionally, you can redirect to a success page
+                    return redirect("/providerHomePage")
+                else:
+                    error_message = "Organization ID does not match your organization. Try again with a different ID!"
+                    return dict(page='providerSignUpPage', error_message=error_message)
+            except (ValueError, IntegrityError):
+                if check == 0:
+                    error_message = "That organization is not in our records. Try again with a different organization name."
+                elif check == 1:
+                    error_message = "The organization ID is a numberical value"
+                else:
+                    error_message = "Email is already in use. Please choose a different email."
+                return dict(page='providerSignUpPage', error_message=error_message)
+        else:
+            if (password != confirmPassword):
+                error_message = 'Passwords do not match. Try again!'
+            elif(name or orgEmail or password or confirmPassword):
+                error_message = "Fill out all fields. Try again!"
+            return dict(page='providerSignUpPage', error_message=error_message)
+        
+    @expose("pages/hubPage.xhtml")
+    def hubPage(self, municipality=None, zipcode=None, city=None, streetAddr=None, aidDescription=None, currCapacity=None, delete_button=None):
+        error_message = ''
+        Session = sessionmaker(bind=engine)
+        dbsession = Session()
+        aidDisplay = ''
+        cap = ''
+
+        checkHub = dbsession.query(Hubs).filter_by(mainProvider=session['email']).first()
+        if checkHub is not None:
+            cap = ''
+            if checkHub.currCapacity == 1:
+                cap = 'Under Capacity'
+            elif checkHub.currCapacity == 2:
+                cap = 'Max Capacity'
+            else:
+                cap = 'Over Capacity'
+            aidDisplay = "\nAddress:\n" + checkHub.streetAddr + ", " + checkHub.city + " " + checkHub.zipcode + ", " + checkHub.municipality + "\n\nProvisions:\n" + checkHub.aidDescription + "\n\nCurrent Capacity:\n" + cap
+        else:
+            aidDisplay = "If you're the leader of resource hub, put it on your profile for citizens and other aid providers to see."
+
+        if municipality and zipcode and city and streetAddr and aidDescription and currCapacity:
+            checkHub = dbsession.query(Hubs).filter_by(mainProvider=session['email']).first()
+            if checkHub is not None:
+                checkHub.municipality=municipality
+                checkHub.zipcode=zipcode
+                checkHub.city=city
+                checkHub.streetAddr=streetAddr
+                checkHub.aidDescription=aidDescription
+                checkHub.currCapacity=currCapacity
+            else:
+                newHub = Hubs(mainProvider=session['email'], municipality=municipality, zipcode=zipcode, city=city, streetAddr=streetAddr, aidDescription=aidDescription, currCapacity=currCapacity)
+                dbsession.add(newHub)
+            dbsession.commit()
+            dbsession.close()
+            now = datetime.now()
+            date_time = now.strftime("%m/%d/%Y - %H:%M")
+            error_message = 'Hub successfully updated: ' + date_time
+            cap = ''
+            if currCapacity == 1:
+                cap = 'Under Capacity'
+            elif currCapacity == 2:
+                cap = 'Max Capacity'
+            else:
+                cap = 'Over Capacity'
+            aidDisplay = "\nAddress:\n" + streetAddr + ", " + city + " " + zipcode + ", " + municipality + "\n\nProvisions:\n" + aidDescription + "\n\nCurrent Capacity:\n" + cap
+            return dict(page='hubPage', civilian_name = session['name'], error_message = error_message, aidDisplay=aidDisplay)
+        elif municipality or zipcode or city or streetAddr or aidDescription or currCapacity:
+            error_message = "You must fill out all hub fields."
+            return dict(page='hubPage', civilian_name = session['name'], error_message=error_message, aidDisplay=aidDisplay)
+        elif delete_button == "Delete Your Hub":
+            checkHub = dbsession.query(Hubs).filter_by(mainProvider=session['email']).first()
+            if checkHub is not None:
+                dbsession.delete(checkHub)
+                dbsession.commit()
+                now = datetime.now()
+                date_time = now.strftime("%m/%d/%Y - %H:%M")
+                error_message = 'Hub successfully deleted: ' + date_time
+                aidDisplay = "If you're the leader of resource hub, put it on your profile for citizens and other aid providers to see."
+            else:
+                error_message = 'No hub to delete'
+            dbsession.close()
+        return dict(page='hubPage', civilian_name = session['name'], error_message=error_message, aidDisplay=aidDisplay)
+
+    @expose("pages/login.xhtml")
+    def logIn(self, email=None, password=None):
+        error_message = ''
+        if email and password:
+            try:
+                Session = sessionmaker(bind=engine)
+                dbsession = Session()
+                currUser = dbsession.query(User).filter_by(email=email).first()
+                if currUser.password != password:
+                    error_message = "Wrong password for email. Try again!"
+                    return dict(page='login', error_message=error_message)
+                session['name'] = currUser.name
+                session['email'] = currUser.email
+                session['calls'] = currUser.children
+                if currUser.orgName != "None":
+                    session['orgName'] = currUser.orgName
+                    dbsession.close()
+                    session.save()
+                    return redirect("/providerHomePage")
+                else:
+                    dbsession.close()
+                    session.save()
+                    return redirect("/citizenHomePage")
+            except AttributeError as a:
+                error_message = "No User associated to your email."
+        elif email or password:
+            error_message = "Fill out all fields. Try again!"
+        return dict(page='login', error_message=error_message)
+    
+
+    @expose("pages/municipalityPage.xhtml")
+    def municipality(self, municipality_name):
+        Session = sessionmaker(bind=engine)
+        dbsession = Session()
+        curMun = dbsession.query(MunicipalityUrgency).filter_by(municipality=municipality_name).first()
+        calls = dbsession.query(EmergencyCall).filter_by(municipality=municipality_name).all()
+        citList = []
+        proList = []
+        for call in calls:
+            curUser = dbsession.query(User).filter_by(email=call.user_email).first()
+            userType = "citizen" if curUser.orgName == 'None' else "provider"
+            if userType == 'citizen':
+                temp_list  = []
+                temp_list.append(curUser.email)
+                temp_list.append((call.date_time_called.strftime("%m/%d/%Y - %H:%M")))
+                temp_list.append(call.emergencyDescription)
+                temp_list.append(call.extendedLocationInfo)
+                temp_list.append(call.status)
+                temp_list.append(call.callId)
+                citList.append(temp_list)
+            else:
+                temp_list  = []
+                temp_list.append(curUser.email)
+                temp_list.append(curUser.orgName)
+                temp_list.append((call.date_time_called.strftime("%m/%d/%Y - %H:%M")))
+                temp_list.append(call.emergencyDescription)
+                temp_list.append(call.extendedLocationInfo)
+                temp_list.append(call.status)
+                temp_list.append(call.callId)
+                proList.append(temp_list)
+
+        dbsession.close()
+        if municipality_name in municipalities:
+            return dict(page='municipalityPage', municipality_name=municipality_name, citCalls=citList, proCalls=proList, urgency_Rating=curMun.urgency_rating)
+        else:
+            response.status_code = 404
+            return 'Invalid municipality name.'
+    
+    @expose('json')
+    def search(self, searchTerm):
+        if searchTerm in municipalities:
+            redirect_url = f'/municipality/{searchTerm}'
+            return {'valid': True, 'redirect_url': redirect_url}
+        else:
+            response.status_code = 404
+            return {'error': 'Invalid search term.'}
+        
+    @expose("pages/testingMap.xhtml")
+    def vulnerabilityMap(self):
+
+        Session = sessionmaker(bind=engine)
+        dbsession = Session()
+        zip_codes = dbsession.query(Hubs.zipcode).all()
+        print(zip_codes[0][0])
+        zip_codes_list = []
+        for zip in zip_codes: 
+            zip_codes_list.append(zip[0])
+        print(zip_codes_list)
+       # zip_codes_list = [row[0] for row in zip_codes]
+        zip_codes_json = json.dumps(zip_codes_list)
+        print(zip_codes_json)
+        #print(zip_codes_json)
+
+    
+        return dict(page='testingMap', zip_codes=zip_codes_json)
+    
+
+    
+    @expose('json')
+    def get_geojson(self):
+        
+            # Replace 'path/to/your/myjson.json' with the actual path to your GeoJSON file
+        with open('myjson.json', 'r') as geojson_file:
+            geojson_data = json.load(geojson_file)
+            
+        # Set appropriate headers for the JSON response
+        response.content_type = 'application/json'
+        
+        return geojson_data
+
+    @expose("pages/callRespondPage.xhtml")
+    def callRespondPage(self, callId, urgency=None, resolution=None, description=None, location=None,messageToCaller=None,damages=None, resources=None, colab=None):
+        error_message = ''
+        if urgency and resolution and description and location and messageToCaller:
+            now = datetime.now()
+            newResponse = EmergencyCallsResponses(
+                callId=callId,
+                date_time_responded = now,
+                urgency=urgency,
+                resolution=resolution,
+                emergencyDescription=description,
+                location=location,
+                messageToCaller=messageToCaller,
+                damages=damages if damages is not None else "None",
+                resources=resources if resources is not None else "None",
+                colabOrg=colab if colab is not None else "None"
+            )
+            Session = sessionmaker(bind=engine)
+            dbsession = Session()
+            dbsession.add(newResponse)
+            dbsession.commit()
+            emerCall = dbsession.query(EmergencyCall).filter_by(callId=callId).first()
+            old_stat = 0
+            new_stat = 0
+            if emerCall.status == "Arrived":
+                old_stat += 1/4
+            elif emerCall.status == "Seen":
+                old_stat += 2/4
+            elif emerCall.status == "Not seen":
+                old_stat += 3/4
+            elif emerCall.status == "NeedHelp":
+                old_stat += 3/4
+            elif emerCall.status == 'NeedCriticalHelp':
+                old_stat += 1
+            if resolution == "Arrived":
+                new_stat += 1/4
+            elif resolution == "Seen":
+                new_stat += 2/4
+            elif resolution == "Not seen":
+                new_stat += 3/4
+            elif resolution == "NeedHelp":
+                new_stat += 3/4
+            elif resolution == 'NeedCriticalHelp':
+                new_stat += 1
+            emerCall.status = resolution
+            curMun = dbsession.query(MunicipalityUrgency).filter_by(municipality=municipality).first()
+            curMun.urgency_rating = curMun.urgency_rating + (new_stat*stat_weight) - (old_stat*stat_weight)
+            dbsession.commit()
+            callUser = dbsession.query(User).filter_by(email=emerCall.user_email).first()
+            session['calls']=callUser.children
+            session.save()
+            permanent_list = []
+            callResponses = emerCall.responses
+            for resp in callResponses:
+                temp_list  = []
+                temp_list.append((resp.date_time_responded.strftime("%m/%d/%Y - %H:%M")))
+                temp_list.append((now - emerCall.date_time_called).days)
+                temp_list.append(resp.emergencyDescription)
+                temp_list.append(resp.location)
+                temp_list.append(resp.damages)
+                temp_list.append(resp.resources)
+                temp_list.append(resp.colabOrg)
+                temp_list.append(resp.resolution)
+                permanent_list.append(temp_list)
+            dbsession.close()
+            return dict(page='callRespondPage', callId=callId, error_message=error_message, responses=permanent_list, emergencyCall=emerCall)
+        elif urgency or resolution or description or location:
+            error_message = "Enter all required fields"
+
+        Session = sessionmaker(bind=engine)
+        dbsession = Session()
+        emerCall = dbsession.query(EmergencyCall).filter_by(callId=callId).first()
+        permanent_list = []
+        callResponses = emerCall.responses
+        for resp in callResponses:
+            temp_list  = []
+            temp_list.append((resp.date_time_responded.strftime("%m/%d/%Y - %H:%M")))
+            temp_list.append((resp.date_time_responded - emerCall.date_time_called).days)
+            temp_list.append(resp.emergencyDescription)
+            temp_list.append(resp.location)
+            temp_list.append(resp.damages)
+            temp_list.append(resp.resources)
+            temp_list.append(resp.colabOrg)
+            temp_list.append(resp.resolution)
+            permanent_list.append(temp_list)
+        dbsession.close()
+        return dict(page='callRespondPage', callId=callId, error_message=error_message, responses=permanent_list, emergencyCall=emerCall)
+    
+    @expose("pages/citCallResponsesPage.xhtml")
+    def citCallResponsesPage(self, callId, urgency=None, description=None, resolution=None, location=None):
+        if urgency or resolution or description or location:
+            now = datetime.now()
+            Session = sessionmaker(bind=engine)
+            dbsession = Session()
+            emerCall = dbsession.query(EmergencyCall).filter_by(callId=callId).first()
+            emerCall.lastUpdated = now
+            municipality = emerCall.municipality
+            curMun = dbsession.query(MunicipalityUrgency).filter_by(municipality=municipality).first()
+            old_stat = 0
+            new_stat = 0
+            if emerCall.status == "Arrived":
+                old_stat += 1/4
+            elif emerCall.status == "Seen":
+                old_stat += 2/4
+            elif emerCall.status == "Not seen":
+                old_stat += 3/4
+            elif emerCall.status == "NeedHelp":
+                old_stat += 3/4
+            elif emerCall.status == 'NeedCriticalHelp':
+                old_stat += 1
+            if resolution == "Arrived":
+                new_stat += 1/4
+            elif resolution == "Seen":
+                new_stat += 2/4
+            elif resolution == "Not seen":
+                new_stat += 3/4
+            elif resolution == "NeedHelp":
+                new_stat += 3/4
+            elif resolution == 'NeedCriticalHelp':
+                new_stat += 1
+            if urgency:
+                curMun.urgency_rating = curMun.urgency_rating + (urg_weight*int(urgency)) - (urg_weight*int(emerCall.urgency))
+                dbsession.commit()
+                emerCall.urgency=urgency
+            if location:
+                emerCall.extendedLocationInfo = location
+            if description:
+                emerCall.emergencyDescription = description
+            if resolution == 'Resolved':
+                curMun.urgency_rating -= (stat_weight*old_stat) + (urg_weight*int(emerCall.urgency)) + (1/max_calls)*(num_call_weight)
+                dbsession.commit()
+                dbsession.delete(emerCall)
+                dbsession.commit()
+                callUser = dbsession.query(User).filter_by(email=emerCall.user_email).first()
+                session['calls']=callUser.children
+                session.save()
+                dbsession.close()
+                return redirect("/citizenHomePage")
+            elif resolution:
+                curMun.urgency_rating = curMun.urgency_rating + (stat_weight*new_stat) - (stat_weight*old_stat)
+                dbsession.commit()
+                emerCall.status = resolution
+            dbsession.commit()
+            permanent_list = []
+            callResponses = emerCall.responses
+            for resp in callResponses:
+                temp_list  = []
+                temp_list.append((resp.date_time_responded.strftime("%m/%d/%Y - %H:%M")))
+                temp_list.append((now - emerCall.date_time_called).days)
+                temp_list.append(resp.emergencyDescription)
+                temp_list.append(resp.location)
+                temp_list.append(resp.damages)
+                temp_list.append(resp.resources)
+                temp_list.append(resp.colabOrg)
+                temp_list.append(resp.resolution)
+                permanent_list.append(temp_list)
+            dbsession.close()
+            return dict(page='citCallResponsePage', callId=callId, responses=permanent_list, emergencyCall=emerCall)
+        
+        Session = sessionmaker(bind=engine)
+        dbsession = Session()
+        emerCall = dbsession.query(EmergencyCall).filter_by(callId=callId).first()
+        permanent_list = []
+        callResponses = emerCall.responses
+        for resp in callResponses:
+            temp_list  = []
+            temp_list.append((resp.date_time_responded.strftime("%m/%d/%Y - %H:%M")))
+            temp_list.append((resp.date_time_responded - emerCall.date_time_called).days)
+            temp_list.append(resp.emergencyDescription)
+            temp_list.append(resp.location)
+            temp_list.append(resp.damages)
+            temp_list.append(resp.resources)
+            temp_list.append(resp.colabOrg)
+            temp_list.append(resp.resolution)
+            permanent_list.append(temp_list)
+        dbsession.close()
+        return dict(page='citCallResponsePage', callId=callId, responses=permanent_list, emergencyCall=emerCall)
+
+
+##Initializing the municipality urgency rating
+
+Session = sessionmaker(bind=engine)
+try:
+    with Session() as newSession:
+        for municipality in municipalities:
+            new_municipality = MunicipalityUrgency(municipality=municipality, urgency_rating=0)
+            newSession.add(new_municipality)
+        newSession.commit()
+        newSession.close()
+except IntegrityError:
+    with Session() as newSession:
+        for municipality in municipalities:
+            curMun = newSession.query(MunicipalityUrgency).filter_by(municipality=municipality).first()
+            calls = newSession.query(EmergencyCall).filter_by(municipality=municipality).all()
+            num_call_norm = len(calls)/max_calls
+            urg_norm = 0
+            stat_norm = 0
+            for call in calls:
+                urg_norm += call.urgency/4
+                if call.status == "Arrived":
+                    stat_norm += 1/4
+                elif call.status == "Seen":
+                    stat_norm += 2/4
+                elif call.status == "Not seen":
+                    stat_norm += 3/4
+                elif call.status == "NeedHelp":
+                    stat_norm += 3/4
+                elif call.status == 'NeedCriticalHelp':
+                    stat_norm += 1
+            urg_rating = (num_call_norm*num_call_weight)+(urg_norm*urg_weight)+(stat_norm*stat_weight)
+            curMun.urgency_rating = urg_rating
+=======
+def setUpMunicipalityUrgencyRating():
+    Session = sessionmaker(bind=engine)
+    try:
+        with Session() as newSession:
+            for municipality in municipalities:
+                new_municipality = MunicipalityUrgency(municipality=municipality, urgency_rating=0)
+                newSession.add(new_municipality)
+
+>>>>>>> 7ebdb55f8f2a8bdc987984b07aa2ec894ccc220e
+            newSession.commit()
+            newSession.close()
+    except IntegrityError:
+        with Session() as newSession:
+            for municipality in municipalities:
+                curMun = newSession.query(MunicipalityUrgency).filter_by(municipality=municipality).first()
+                calls = newSession.query(EmergencyCall).filter_by(municipality=municipality).all()
+                num_call_norm = len(calls)/max_calls
+                urg_norm = 0
+                stat_norm = 0
+                for call in calls:
+                    urg_norm += call.urgency/4
+                    if call.status == "Arrived":
+                        stat_norm += 1/4
+                    elif call.status == "Seen":
+                        stat_norm += 2/4
+                    elif call.status == "Not seen":
+                        stat_norm += 3/4
+                    elif call.status == "NeedHelp":
+                        stat_norm += 3/4
+                    elif call.status == 'NeedCriticalHelp':
+                        stat_norm += 1
+                urg_rating = (num_call_norm*num_call_weight)+(urg_norm*urg_weight)+(stat_norm*stat_weight)
+                curMun.urgency_rating = urg_rating
+                newSession.commit()
+                newSession.close()        
+
+    except Exception as e:
+                # Handle any exceptions (e.g., file not found, parsing error)
+        response.status_code = 500
+        #return {'error': str(e)}
+
+if __name__ == '__main__':
+    setUpMunicipalityUrgencyRating()
+ # Serve the newly configured web application.
+<<<<<<< HEAD
+print("Serving on port 8080...")
+httpd = make_server('', 8080, config.make_wsgi_app())
+httpd.serve_forever()
+
+
+
+=======
+    print("Serving on port 8080...")
+    httpd = make_server('', 8080, config.make_wsgi_app())
+    httpd.serve_forever()
+>>>>>>> 7ebdb55f8f2a8bdc987984b07aa2ec894ccc220e

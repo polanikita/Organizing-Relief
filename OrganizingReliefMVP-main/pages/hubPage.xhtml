@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Poppins"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+
+  <head>
+    <style>
+      body {
+        font-family: Poppins, sans-serif;
+        color: black;
+        margin: 0;
+        padding: 0;
+        background: rgb(0, 32, 91);
+      }
+
+      header {
+        background-color: #00205b;
+        /* dark blue */
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      nav {
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        color: #809bce;
+        /* Light blue on hover */
+      }
+      section {
+        padding: 120px 20px 20px;
+        /* Adjust top padding based on header and nav height */
+        width: 100%;
+        height: 100vh;
+        background: rgb(0, 32, 91);
+        background: linear-gradient(
+          160deg,
+          rgba(0, 32, 91, 1) 21%,
+          rgba(239, 51, 64, 1) 60%,
+          rgba(255, 255, 255, 1) 91%
+        );
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 24pt;
+        color: white;
+        text-align: center;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-size: 20pt;
+        color: black;
+        text-align: center;
+      }
+
+      pre {
+        font-family: Poppins, sans-serif;
+        font-size: 12pt;
+        white-space: pre-wrap;       
+        word-wrap: break-word;
+        text-align: center;
+      }
+
+      select {
+        width: calc(100% - 20px);
+        font-size: 10pt;
+        padding: 0.675em 6em 0.675em 1em;
+        background-color: white;
+        border: 1px solid #caced1;
+        border-radius: 5px;
+        color: #000;
+        cursor: pointer;
+      }
+
+      .currentHub {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        width: 200px;
+        flex-grow: 3;
+        text-align: center;
+        word-wrap: break-word;
+        margin: 0px 10px 30px;
+      }
+
+      .hubForm {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        /*width: 400px;*/
+        flex-grow: 7;
+        text-align: center;
+        margin: 0px 10px 30px;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 10pt;
+      }
+
+      input[type="select"] {
+        width: calc(100% - 20px);
+      }
+
+      input[type="submit"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        background-color: #809bce;
+        /* Slightly lighter blue submit button */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3185fc;
+        /* Darker blue on hover */
+      }
+    </style>
+  </head>
+
+  <title>${civilian_name}'s Aid</title>
+
+  <body>
+    <header>
+      <h1>${civilian_name}'s Aid</h1>
+      <nav>
+        <a href="${tg.url('/providerHomePage')}">Home</a>
+        <a href="${tg.url('/vulnerabilityMap')}">Vulnerability Map</a>
+        <a href="${tg.url('/')}">Chat</a>
+        <a href="${tg.url('/')}">Sign Out</a>
+        <!-- Add more navigation links as needed -->
+      </nav>
+    </header>
+
+    <section>
+      <div class="currentHub">
+        <h2>Your Current Hub</h2>
+        <pre>${aidDisplay}</pre>
+        <form action="${tg.url('/hubPage')}" method="POST" > 
+          <input type="submit" name="delete_button" value="Delete Your Hub" />
+        </form>  
+      </div>
+
+      <div class="hubForm">
+        <h2>Update Your Hub</h2>
+        <form action="${tg.url('/hubPage')}" method="POST">
+
+          <label for="municipality">Municipality:</label>
+          <div class="autocomplete-container">
+            <input
+              type="text"
+              id="municipality"
+              name="municipality"
+              autocomplete="off"
+              required=""
+            />
+            <div class="autocomplete-results" id="autocompleteResults"></div>
+          </div>
+
+          <label for="zipcode">Zip Code:</label>
+          <input type="text" id="zipcode" name="zipcode" />
+
+          <label for="city">City/Town:</label>
+          <input type="text" id="city" name="city" />
+
+          <label for="streetAddr">Street Address:</label>
+          <input type="text" id="streetAddr" name="streetAddr" />
+
+          <label for="aidDescription">Describe the aid you're providing:</label>
+          <input type="text" id="aidDescription" name="aidDescription" />
+
+          <label for="currCapacity">Current Capacity:</label>
+          <select id="currCapacity" name="currCapacity">
+            <option value="1">Under Capacity</option>
+            <option value="2">Maximum capacity</option>
+            <option value="3">Over Capacity</option>
+          </select>
+
+          <br> </br> <br> </br>
+
+          <input type="submit" name="update_button" value="Update Your Hub" />
+        </form>
+        <label>${error_message} </label>
+      </div>
+    </section>
+    <script>
+      var municipalities = "${municipalityList}"
+      municipalities = JSON.parse(municipalities.replace(/'/g, '"'))
+
+      const municipalityInput = document.getElementById("municipality");
+      const autocompleteResults = document.getElementById(
+        "autocompleteResults"
+      );
+
+      function filterMunicipalities(searchTerm) {
+        return municipalities
+          .filter((municipality) =>
+            municipality.toLowerCase().startsWith(searchTerm.toLowerCase())
+          )
+          .slice(0, 4); // Display top four matches
+      }
+
+      function displayAutocompleteResults(filteredMunicipalities) {
+        autocompleteResults.innerHTML = "";
+
+        if (filteredMunicipalities.length === 0) {
+          const noResults = document.createElement("div");
+          noResults.textContent = "No matching municipalities found.";
+          autocompleteResults.appendChild(noResults);
+          return;
+        }
+
+        filteredMunicipalities.forEach((municipality) => {
+          const resultItem = document.createElement("div");
+          resultItem.className = "autocomplete-result";
+          resultItem.textContent = municipality;
+          resultItem.addEventListener("click", function () {
+            municipalityInput.value = municipality;
+            autocompleteResults.innerHTML = "";
+          });
+          autocompleteResults.appendChild(resultItem);
+        });
+      }
+
+      municipalityInput.addEventListener("input", function () {
+        const searchTerm = this.value;
+        const filteredMunicipalities = filterMunicipalities(searchTerm);
+
+        displayAutocompleteResults(filteredMunicipalities);
+      });
+
+      document.addEventListener("click", function (event) {
+        if (!autocompleteResults.contains(event.target)) {
+          autocompleteResults.innerHTML = "";
+        }
+      });
+    </script>
+  </body>
+</html>

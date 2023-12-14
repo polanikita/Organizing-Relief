@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Poppins"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+
+  <head>
+    <style>
+      body {
+        font-family: Poppins, sans-serif;
+        color: black;
+        margin: 0;
+        padding: 0;
+        background: rgb(0, 32, 91);
+      }
+
+      header {
+        background-color: #00205b;
+        /* dark blue */
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      nav {
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        color: #809bce;
+        /* Light blue on hover */
+      }
+      section {
+        padding: 120px 20px 20px;
+        /* Adjust top padding based on header and nav height */
+        width: 100%;
+        height: 100vh;
+        background: rgb(0, 32, 91);
+        background: linear-gradient(
+          160deg,
+          rgba(0, 32, 91, 1) 21%,
+          rgba(239, 51, 64, 1) 60%,
+          rgba(255, 255, 255, 1) 91%
+        );
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 24pt;
+        color: white;
+        text-align: center;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-size: 20pt;
+        color: black;
+        text-align: center;
+      }
+
+      select {
+        width: calc(100% - 20px);
+        font-size: 10pt;
+        padding: 0.675em 6em 0.675em 1em;
+        background-color: white;
+        border: 1px solid #caced1;
+        border-radius: 5px;
+        color: #000;
+        cursor: pointer;
+      }
+
+      table {
+        width: auto;
+        table-layout: auto;
+      }
+
+      table thead {
+        color: white;
+        white-space: nowrap;
+      }
+
+      table tbody {
+        word-wrap: break-word;
+      }
+
+      th,
+      td {
+        padding: 5px;
+      }
+
+      .callForm {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        /*width: 400px;*/
+        flex-grow: 1;
+        text-align: center;
+        margin: 0px 10px 30px;
+      }
+
+      .callDashboard {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        /*width: 400px;*/
+        flex-basis: 500px;
+        flex-grow: 10;
+        text-align: center;
+        margin: 0px 20px 30px;
+      }
+
+      .break {
+        flex-basis: 100%;
+        height: 0;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 10pt;
+      }
+
+      input[type="select"] {
+        width: calc(100% - 20px);
+      }
+
+      input[type="submit"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        background-color: #809bce;
+        /* Slightly lighter blue submit button */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3185fc;
+        /* Darker blue on hover */
+      }
+    </style>
+  </head>
+
+  <title>${municipality_name} Home</title>
+
+  <body>
+    <header>
+      <h1>Hubs in ${municipality_name}</h1>
+      <h1>Urgency Rating: ${round(urgency_Rating, 2)}</h1>
+      <nav>
+        <a href="${tg.url('/citizenHomePage/')}">Home</a>
+        <a href="${tg.url('/vulnerabilityMap')}">Vulnerability Map</a>
+        <a href="${tg.url('/')}">Sign Out</a>
+        <!-- Add more navigation links as needed -->
+      </nav>
+    </header>
+    <section>
+      <div class="callDashboard">
+        <h2>Relief Hubs Dashboard</h2>
+        <table style="width: 100%" border="1">
+          <thead bgcolor="#809BCE">
+            <tr>
+              <th>Organization Name</th>
+              <th>Municipality</th>
+              <th>Address</th>
+              <th>Description</th>
+              <th>Capacity</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 400">
+            <tr py:for="call in hubList">
+              <td>${call[0]}</td>
+              <td>${call[1]}</td>
+              <td>${call[3]}, ${call[2]}</td>
+              <td>${call[4]}</td>
+              <td>${call[5]}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </body>
+</html>

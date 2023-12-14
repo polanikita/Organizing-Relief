@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Poppins"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+
+  <head>
+    <style>
+      body {
+        font-family: Poppins, sans-serif;
+        color: black;
+        margin: 0;
+        padding: 0;
+        background: rgb(0, 32, 91);
+      }
+
+      header {
+        background-color: #00205b;
+        /* dark blue */
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      nav {
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        color: #809bce;
+        /* Light blue on hover */
+      }
+      section {
+        padding: 120px 20px 20px;
+        /* Adjust top padding based on header and nav height */
+        width: 100%;
+        background: rgb(0, 32, 91);
+        background: linear-gradient(
+          160deg,
+          rgba(0, 32, 91, 1) 21%,
+          rgba(239, 51, 64, 1) 60%,
+          rgba(255, 255, 255, 1) 91%
+        );
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 24pt;
+        color: white;
+        text-align: center;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-size: 20pt;
+        color: black;
+        text-align: center;
+      }
+
+      select {
+        width: calc(100% - 20px);
+        font-size: 10pt;
+        padding: 0.675em 6em 0.675em 1em;
+        background-color: white;
+        border: 1px solid #caced1;
+        border-radius: 5px;
+        color: #000;
+        cursor: pointer;
+      }
+
+      table {
+        width: auto;
+        table-layout: auto;
+      }
+
+      table thead {
+        color: white;
+        white-space: nowrap;
+      }
+
+      table tbody {
+        word-wrap: break-word;
+      }
+
+      th,
+      td {
+        padding: 5px;
+      }
+
+      .callForm {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        height: 100vh;
+        flex-grow: 1;
+        text-align: center;
+        margin: 0px 10px 30px;
+      }
+      .emergencyCallDetails {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        flex-basis: 100%; /* Full width */
+        text-align: center;
+        margin: 0px 20px 30px;
+        height: auto;
+      }
+
+      .details p {
+        margin: 8px 0;
+      }
+
+      .callDashboard {
+        height: 100vh;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        flex-basis: 500px;
+        flex-grow: 10;
+        text-align: center;
+        margin: 0px 20px 30px;
+      }
+
+      .break {
+        flex-basis: 100%;
+        height: 0;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 10pt;
+      }
+
+      input[type="select"] {
+        width: calc(100% - 20px);
+      }
+
+      input[type="submit"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        background-color: #809bce;
+        /* Slightly lighter blue submit button */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3185fc;
+        /* Darker blue on hover */
+      }
+    </style>
+  </head>
+
+  <title>Emergency Call</title>
+
+  <body>
+    <header>
+      <h1>Emergency Call</h1>
+      <nav>
+        <a
+          href="${tg.url('/citizenHomePage') if isCitizen else tg.url('/providerHomePage')}"
+          >Home</a
+        >
+
+        <a href="${tg.url('/')}">Sign Out</a>
+        <!-- Add more navigation links as needed -->
+      </nav>
+    </header>
+    <section>
+      <!-- <div class="break"></div> -->
+      <div class="emergencyCallDetails">
+        <h2>Emergency Call Details</h2>
+        <div class="details">
+          <p>
+            <strong>Date Reported:</strong>
+            ${emergencyCall.date_time_called.strftime("%m/%d/%Y - %H:%M")}
+          </p>
+          <p>
+            <strong>Last Updated:</strong>
+            ${emergencyCall.lastUpdated.strftime("%m/%d/%Y - %H:%M")}
+          </p>
+          <p>
+            <strong>Description:</strong> ${emergencyCall.emergencyDescription}
+          </p>
+          <p>
+            <strong>Location:</strong> ${emergencyCall.extendedLocationInfo}
+          </p>
+          <p><strong>Status:</strong> ${emergencyCall.status}</p>
+        </div>
+      </div>
+      <div class="callForm">
+        <h2>Update Emergency Call</h2>
+        <form
+          action="${tg.url('/citCallResponsesPage', {'callId': callId})}"
+          method="POST"
+        >
+          <br />
+          <label for="urgency">Select your emergency's urgency:</label>
+          <select id="urgency" name="urgency">
+            <option value="1">Minor</option>
+            <option value="2">Medium</option>
+            <option value="3">Major</option>
+            <option value="4">Critical</option>
+          </select>
+          <br /><br />
+
+          <label for="description">Describe your emergency:</label>
+          <input type="text" id="description" name="description" />
+          <br /><br />
+
+          <label for="resolution"
+            >Confirm Status: <span style="color: red">*</span></label
+          >
+          <select type="text" id="resolution" name="resolution">
+            <option value="Resolved">Resolved</option>
+            <option value="Arrived">Arrived</option>
+            <option value="Not seen">Not Seen</option>
+            <option value="Seen">Seen</option>
+            <option value="NeedHelp">Need help</option>
+            <option value="NeedCriticalHelp">Need critical help</option>
+          </select>
+          <br /><br />
+
+          <label for="location">Describe your exact location:</label>
+          <input type="text" id="location" name="location" />
+
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+      <div class="callDashboard">
+        <h2>Relief Provider Responses</h2>
+        <table style="width: 100%" border="1">
+          <thead bgcolor="#809BCE">
+            <tr>
+              <th>Date Responded</th>
+              <th>Days Since Call</th>
+              <th>Emergency Description</th>
+              <th>Location</th>
+              <th>Damages</th>
+              <th>Resources</th>
+              <th>Organization Requested</th>
+              <th>Resolution</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 400">
+            <tr py:for="resp in responses">
+              <td>${resp[0]}</td>
+              <td>${resp[1]}</td>
+              <td>${resp[2]}</td>
+              <td>${resp[3]}</td>
+              <td>${resp[4]}</td>
+              <td>${resp[5]}</td>
+              <td>${resp[6]}</td>
+              <td>${resp[7]}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </body>
+</html>

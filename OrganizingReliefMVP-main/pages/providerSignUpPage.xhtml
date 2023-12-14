@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <title>Relief Provider Sign Up</title>
+    <style>
+      body {
+        font-family: Poppins, sans-serif;
+        color: white;
+        margin: 0;
+        padding: 0;
+        background: rgb(0, 32, 91);
+      }
+
+      header {
+        background-color: #00205b;
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      nav {
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        color: #809bce;
+      }
+
+      section {
+        padding: 120px 20px 20px;
+        width: 100%;
+        background: rgb(0, 32, 91);
+        background: linear-gradient(
+          160deg,
+          rgba(0, 32, 91, 1) 21%,
+          rgba(239, 51, 64, 1) 60%,
+          rgba(255, 255, 255, 1) 91%
+        );
+      }
+
+      .container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        width: 400px;
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 24pt;
+        color: white;
+        text-align: center;
+      }
+
+      h2 {
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      h3 {
+        text-align: center;
+        font-size: 14pt;
+        color: black;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      input[type="submit"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        background-color: #809bce;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3185fc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>ORGANIZING RELIEF</h1>
+      <nav>
+        <a href="${tg.url('/')}">Home</a>
+        <a href="${tg.url('/citizenSignup')}">Citizen Sign Up</a>
+        <a href="${tg.url('/logIn')}">Log In</a>
+      </nav>
+    </header>
+
+    <section>
+      <h2>Relief Provider Sign Up</h2>
+
+      <div class="container">
+        <form action="${tg.url('/providerSignup')}" method="POST">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" />
+
+          <label for="orgEmail">Organization Email:</label>
+          <input type="email" id="orgEmail" name="orgEmail" />
+
+          <label for="orgName">Organization Name:</label>
+          <input type="text" id="orgName" name="orgName" />
+
+          <label for="orgID">Organization ID:</label>
+          <input type="text" id="orgID" name="orgID" />
+
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" />
+
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" />
+
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+      <br />
+      <br />
+      <h3>${ error_message }</h3>
+    </section>
+  </body>
+</html>

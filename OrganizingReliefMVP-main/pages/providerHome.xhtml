@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Poppins"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+  <link 
+    rel="stylesheet" 
+    href="styles.css" 
+  />
+  <!-- A stylesheet is a set of CSS rules used to control the layout and design of a webpage or document-->
+  <head>
+    <style>
+      body {
+        font-family: Poppins, sans-serif;
+        color: black;
+        margin: 0;
+        padding: 0;
+        background: rgb(0, 32, 91);
+      }
+
+      header {
+        background-color: #00205b;
+        /* dark blue */
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      nav {
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        color: #809bce;
+        /* Light blue on hover */
+      }
+      section {
+        padding: 120px 20px 20px;
+        /* Adjust top padding based on header and nav height */
+        width: 100%;
+        height: 100vh;
+        background: rgb(0, 32, 91);
+        background: linear-gradient(
+          160deg,
+          rgba(0, 32, 91, 1) 21%,
+          rgba(239, 51, 64, 1) 60%,
+          rgba(255, 255, 255, 1) 91%
+        );
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 24pt;
+        color: white;
+        text-align: center;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-size: 20pt;
+        color: black;
+        text-align: center;
+      }
+
+      select {
+        width: calc(100% - 20px);
+        font-size: 10pt;
+        padding: 0.675em 6em 0.675em 1em;
+        background-color: white;
+        border: 1px solid #caced1;
+        border-radius: 5px;
+        color: #000;
+        cursor: pointer;
+      }
+
+      table {
+        width: auto;
+        table-layout: auto;
+      }
+
+      table thead {
+        color: white;
+        white-space: nowrap;
+      }
+
+      table tbody {
+        word-wrap: break-word;
+      }
+
+      th,
+      td {
+        padding: 5px;
+      }
+      .callForm {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        /*width: 400px;*/
+        flex-grow: 1;
+        text-align: center;
+        margin: 0px 10px 30px;
+      }
+
+      .callDashboard {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        /*width: 400px;*/
+        flex-basis: 500px;
+        flex-grow: 10;
+        text-align: center;
+        margin: 0px 20px 30px;
+      }
+
+      .break {
+        flex-basis: 100%;
+        height: 0;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+      
+      input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 10pt;
+      }
+
+      input[type="select"] {
+        width: calc(100% - 20px);
+      }
+
+      input[type="submit"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        background-color: #809bce;
+        /* Slightly lighter blue submit button */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3185fc;
+        /* Darker blue on hover */
+      }
+    </style>
+  </head>
+
+  <title>${civilian_name} Home</title>
+
+  <body>
+    <header>
+      <h1>${civilian_name} Home</h1>
+      <nav>
+        <a href="${tg.url('/hubPage')}">Enter Aid Location</a>
+        <a href="${tg.url('/vulnerabilityMap')}">Vulnerability Map</a>
+        <a href="${tg.url('/chatPage')}">Chat</a>
+
+        <a href="${tg.url('/')}">Sign Out</a>
+        <!-- Add more navigation links as needed -->
+      </nav>
+    </header>
+    <section>
+      <div class="callForm">
+        <h2>Emergency Call</h2>
+        <form id="emergencyForm" action="${tg.url('/providerHomePage')}" method="POST">
+          <br />
+          <label for="urgency">Select your emergency's urgency:</label>
+          <select id="urgency" name="urgency">
+            <option value="1">Minor</option>
+            <option value="2">Medium</option>
+            <option value="3">Major</option>
+            <option value="4">Critical</option>
+          </select>
+          <br /><br />
+
+          <label for="description">Describe your emergency:</label>
+          <input type="text" id="description" name="description" />
+
+          <label for="municipality">Municipality:</label>
+          <div class="autocomplete-container">
+            <input
+              type="text"
+              id="municipality"
+              name="municipality"
+              autocomplete="off"
+              required=""
+            />
+            <div class="autocomplete-results" id="autocompleteResults"></div>
+          </div>
+
+          <label for="location">Describe your exact location:</label>
+          <input type="text" id="location" name="location" />
+
+          <br> </br> <br> </br>
+
+          <input type="submit" value="Submit" />
+        </form>
+        <label>${error_message} </label>
+      </div>
+      <div class="callDashboard">
+        <h2>Call Dashboard</h2>
+        <table style="width: 100%" border="1">
+          <thead bgcolor="#809BCE">
+            <tr>
+              <th>Date reported</th>
+              <th>Emergency Description</th>
+              <th>Municipality</th>
+              <th>Address</th>
+              <th>Status</th>
+              <th>See Responses</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 400">
+            <tr py:for="call in calls">
+              <td>${call[0]}</td>
+              <td>${call[1]}</td>
+              <td>${call[2]}</td>
+              <td>${call[3]}</td>
+              <td>${call[4]}</td>
+              <td>
+                <a
+                  href="${tg.url('/citCallResponsesPage', {'callId': call[5]})}"
+                  >Responses</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <script>
+      var municipalities = "${municipalityList}"
+      municipalities = JSON.parse(municipalities.replace(/'/g, '"'))
+
+      const municipalityInput = document.getElementById("municipality");
+      const autocompleteResults = document.getElementById(
+        "autocompleteResults"
+      );
+
+      function filterMunicipalities(searchTerm) {
+        return municipalities
+          .filter((municipality) =>
+            municipality.toLowerCase().startsWith(searchTerm.toLowerCase())
+          )
+          .slice(0, 4); // Display top four matches
+      }
+
+      function displayAutocompleteResults(filteredMunicipalities) {
+        autocompleteResults.innerHTML = "";
+
+        if (filteredMunicipalities.length === 0) {
+          const noResults = document.createElement("div");
+          noResults.textContent = "No matching municipalities found.";
+          autocompleteResults.appendChild(noResults);
+          return;
+        }
+
+        filteredMunicipalities.forEach((municipality) => {
+          const resultItem = document.createElement("div");
+          resultItem.className = "autocomplete-result";
+          resultItem.textContent = municipality;
+          resultItem.addEventListener("click", function () {
+            municipalityInput.value = municipality;
+            autocompleteResults.innerHTML = "";
+          });
+          autocompleteResults.appendChild(resultItem);
+        });
+      }
+
+      municipalityInput.addEventListener("input", function () {
+        const searchTerm = this.value;
+        const filteredMunicipalities = filterMunicipalities(searchTerm);
+
+        displayAutocompleteResults(filteredMunicipalities);
+      });
+
+      document.addEventListener("click", function (event) {
+        if (!autocompleteResults.contains(event.target)) {
+          autocompleteResults.innerHTML = "";
+        }
+      });
+    </script>
+
+    <script>
+
+      const buttonToBeClicked = document.getElementById("send");
+      
+      window.addEventListener("DOMContentLoaded", () => {
+      const websocket = new WebSocket("ws://localhost:8001/");
+    });
+    </script>
+    <script>
+      if ( window.history.replaceState ) {
+          window.history.replaceState( null, null, window.location.href );
+      }
+    </script>
+  </body>
+  <script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+  </script>
+</html>

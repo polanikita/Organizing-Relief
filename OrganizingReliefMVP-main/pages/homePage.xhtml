@@ -1,0 +1,153 @@
+<html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  
+    
+<title>Home Page</title>
+    <style>
+      body {
+        font-family: Poppins, sans-serif;
+        color: white;
+        margin: 0;
+        padding: 0;
+        background: rgb(0, 32, 91);
+        background: linear-gradient(
+          160deg,
+          rgba(0, 32, 91, 1) 21%,
+          rgba(239, 51, 64, 1) 60%,
+          rgba(255, 255, 255, 1) 91%
+        );
+      }
+      header {
+        font-family: Poppins, sans-serif;
+        background-color: #00205b;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+      h1 {
+        text-align: center;
+        font-weight: 600;
+        font-size: 24pt;
+      }
+      nav {
+        padding: 10px 20px;
+        text-align: center;
+      }
+      nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+      }
+      nav a:hover {
+        color: #3185fc;
+      }
+      .carousel {
+        margin-top: 90px; /* Adjust this value as needed */
+        height: calc(
+          100vh - 90px
+        ); /* Set the height to fill the viewport minus header height */
+      }
+      .carousel-item {
+        text-align: center;
+      }
+      .carousel-item img {
+        max-width: 50%; /* Adjust the size of the images */
+        height: auto;
+        display: block;
+        margin: 10px auto;
+      }
+      .carousel-item p {
+        background: rgba(
+          0,
+          0,
+          0,
+          0.7
+        ); /* Background color with some transparency */
+        padding: 15px;
+      }
+    </style>
+  
+  
+    <header>
+      
+<h1>ORGANIZING RELIEF</h1>
+      <nav>
+        <a href="${tg.url('/citizenSignUpPage')}">Citizen Sign Up</a>
+        <a href="${tg.url('/providerSignup')}">Relief Provider Sign Up</a>
+        <a href="${tg.url('/logIn')}">Log In</a>
+      </nav>
+    </header>
+    
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Slides -->
+      
+<div class="carousel-inner">
+        
+<div class="carousel-item active">
+          
+<h2>About Us</h2>
+          <img src="https://i0.wp.com/news.northeastern.edu/wp-content/uploads/2022/09/Puerto_Rico_1400.jpg?fit=1400%2C933&amp;ssl=1" alt="Flooding in PR after hurricane" />
+          
+<p>
+            Puerto Rico faces hurricanes that are hard to endure and rebuild
+            from. In 2022 alone, 14 hurricanes hit the nation, leaving many
+            citizens injured, displaced, or killed. We want to help those
+            directly affected by these natural disasters and better direct
+            resilience efforts on the ground trying to help. Organizing Relief
+            is a software made to help allocate aid and resources to these
+            citizens. By leading the aid providers directly to those in need, we
+            hope to support the survival and endurance of the victims of these
+            hurricanes.
+          </p>
+        </div>
+        
+<div class="carousel-item">
+          
+<h2>Our Services</h2>
+          <img src="https://www.redcross.org/content/dam/redcross/atg/News_Images/12271-035.jpg.transform/1288/q70/feature/image.jpeg" alt="Red Cross member aiding citizens" />
+          
+<p>
+            Our application offers aid-based functionality for Puerto Rican
+            citizens affected by hurricanes and members of resilience efforts
+            trying to help. Citizens can register for an account quickly and use
+            it to directly alert aid organizations of their situation. Once
+            daily, citizens can fill out the emergency call form, with a
+            description of their problem and a ranking of how dire it is.
+            Members of resilience efforts can register for an account with a
+            valid organization code. Through that account, resilience efforts
+            members can also fill out emergency call forms, see and respond to
+            emergency calls, view a vulnerability ranking of different
+            municipalities, and chat with other organizations.
+          </p>
+        </div>
+      </div>
+      <!-- Controls -->
+      <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true" />
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true" />
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+    
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+</html>

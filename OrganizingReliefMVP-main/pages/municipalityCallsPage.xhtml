@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Poppins"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+
+  <head>
+    <style>
+      body {
+        font-family: Poppins, sans-serif;
+        color: black;
+        margin: 0;
+        padding: 0;
+        background: rgb(0, 32, 91);
+      }
+
+      header {
+        background-color: #00205b;
+        /* dark blue */
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      nav {
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        color: #809bce;
+        /* Light blue on hover */
+      }
+      section {
+        padding: 120px 20px 20px;
+        /* Adjust top padding based on header and nav height */
+        width: 100%;
+        height: 100vh;
+        background: rgb(0, 32, 91);
+        background: linear-gradient(
+          160deg,
+          rgba(0, 32, 91, 1) 21%,
+          rgba(239, 51, 64, 1) 60%,
+          rgba(255, 255, 255, 1) 91%
+        );
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 24pt;
+        color: white;
+        text-align: center;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-size: 20pt;
+        color: black;
+        text-align: center;
+      }
+
+      select {
+        width: calc(100% - 20px);
+        font-size: 10pt;
+        padding: 0.675em 6em 0.675em 1em;
+        background-color: white;
+        border: 1px solid #caced1;
+        border-radius: 5px;
+        color: #000;
+        cursor: pointer;
+      }
+
+      table {
+        width: auto;
+        table-layout: auto;
+      }
+
+      table thead {
+        color: white;
+        white-space: nowrap;
+      }
+
+      table tbody {
+        word-wrap: break-word;
+      }
+
+      th,
+      td {
+        padding: 5px;
+      }
+
+      .callForm {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        /*width: 400px;*/
+        flex-grow: 1;
+        text-align: center;
+        margin: 0px 10px 30px;
+      }
+
+      .callDashboard {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        /*width: 400px;*/
+        flex-basis: 500px;
+        flex-grow: 10;
+        text-align: center;
+        margin: 0px 20px 30px;
+      }
+
+      .break {
+        flex-basis: 100%;
+        height: 0;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 10pt;
+      }
+
+      input[type="select"] {
+        width: calc(100% - 20px);
+      }
+
+      input[type="submit"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        background-color: #809bce;
+        /* Slightly lighter blue submit button */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3185fc;
+        /* Darker blue on hover */
+      }
+      @media screen and (min-width: 1200px) {
+        section {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .callDashboard {
+          flex-basis: 48%; /* Two columns at 48% width */
+        }
+
+        .callDashboard:nth-child(3) {
+          flex-basis: 100%; /* Third column at 100% width */
+          margin-top: 20px; /* Add some space between the third and the first two */
+        }
+      }
+            h1 {
+        font-weight: 600;
+        font-size: 24pt;
+        color: white;
+        text-align: center;
+      }
+      h2 {
+        font-weight: 600;
+        font-size: 20pt;
+        color: black;
+        text-align: center;
+      }
+      .chat-container {
+        background-color: black;
+        color: white;
+        border-radius: 10px; /*border-radius CSS property rounds the corners of an element's outer border edge */
+        box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.2);
+        padding: 30px; /*the space between its content and its border.*/
+        text-align: start;
+        margin: 0px 1% 1% 1%; /*margin is used to separate the element from its neighbor*/
+        overflow: hidden;
+        letter-spacing: 0.5px;
+        flex-grow: 1;
+        max-width: 50%;
+      }
+      .msg-header {
+        height: 5%;
+        border-bottom: none;
+        display: inline-flex;
+        margin: 0;
+      }
+      .inputdatalist {
+        max-width: 100px;
+        background-color: pink;
+      }
+      .container1 {
+        width: 270px;
+        height: auto;
+        margin: 0;
+        flex-grow: 1;
+      }
+      h2.chat {
+        font-weight: 600;
+        font-size: 20pt;
+        color: white;
+        margin: 0 0 0 5px;
+        height: 10%;
+      }
+      .chat-page {
+        padding: 0 0 50 0;
+        max-height: 100%;
+        margin: 0;
+      }
+      .msg-inbox {
+        overflow: hidden;
+      }
+      .chats {
+        padding: 30px 15px 0 25px;
+        max-height: 500px;
+      }
+      .msg-page {
+        max-height: 350px;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      .chat-type {
+        position: relative;
+        height: 11%;
+      }
+      .received-msg-box {
+        /*the overall structure/box of the message*/
+        display: inline-block;
+        padding: 0 0 0 10px;
+        vertical-align: top;
+        width: 52.44%;
+      }
+      .received-msg p {
+        /*structure of the actual text/message within everything*/
+        background: #efefef none repeat scroll 0 0;
+        color: #646464;
+        border-radius: 10px;
+        font-size: 13px;
+        margin-left: 1rem;
+        padding: 1rem;
+        width: 100%;
+        box-shadow: rgb(0 0 0 / 25%) 0px 5px 5px 2px;
+      }
+      p {
+        overflow-wrap: break-word;
+      }
+      .received-msg {
+        margin: 1.5rem;
+      }
+      .outgoing-msg {
+        margin: 1.5rem;
+      }
+      .outgoing-msg p {
+        background: #312aff none repeat scroll 0 0;
+        color: #fff;
+        border-radius: 10px;
+        font-size: 14px;
+        padding: 1rem;
+        width: 100%;
+        box-shadow: #00000040 0px 2px 5px 2px;
+        margin-right: 1rem;
+      }
+      .outgoing-msg-box {
+        padding: 0 5px 0 5px;
+        width: 56%;
+        display: inline-block;
+        float: right;
+      }
+      /* Styling the input field */
+      .input-group {
+        margin-top: 13px;
+        margin-right: 20px;
+        outline: none !important;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+      }
+
+      .input-group > .form-control {
+        width: 1%;
+        margin-bottom: 15px;
+      }
+      .form-control {
+        padding: 0.375rem 0.75rem;
+        background-clip: padding-box;
+      }
+      .time {
+        color: #aaa5a5;
+        display: block;
+        font-size: 9px;
+        margin: 2px 0 0;
+      }
+      label {
+        display: block;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+      input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 10pt;
+      }
+      input[type="select"] {
+        width: calc(100% - 20px);
+      }
+      .chatsubmit {
+        width: calc(100% - 20px);
+        padding: 10px;
+        background-color: #809bce;
+        /* Slightly lighter blue submit button */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .chatsubmit:hover {
+        background-color: #3185fc;
+        /* Darker blue on hover */
+      }
+      .button {
+        align-self: center;
+        top: 50%;
+      }
+      .classlistt {
+        flex-grow: 1;
+      }
+      .mchange {
+        flex-grow: 3;
+      }
+    </style>
+  </head>
+
+  <title>${municipality_name} Home</title>
+
+  <body>
+    <header>
+      <h1>Calls in ${municipality_name}</h1>
+      <h1>Urgency Rating: ${round(urgency_Rating, 2)}</h1>
+      <h1>Total Number of Calls: ${citCount + proCount}</h1>
+      <nav>
+        <a href="${tg.url('/providerHomePage/')}">Home</a>
+        <a href="${tg.url('/vulnerabilityMap')}">Vulnerability Map</a>
+        <a href="${tg.url('/')}">Sign Out</a>
+        <!-- Add more navigation links as needed -->
+      </nav>
+    </header>
+    <section>
+      <div class="callDashboard">
+        <h2>Citizens Calls Dashboard (${citCount})</h2>
+        <table style="width: 100%" border="1">
+          <thead bgcolor="#809BCE">
+            <tr>
+              <th>Citizen's Email</th>
+              <th>Date Reported</th>
+              <th>Emergency Description</th>
+              <th>Address</th>
+              <th>Status</th>
+              <th>Respond</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 400">
+            <tr py:for="call in citCalls">
+              <td>${call[0]}</td>
+              <td>${call[1]}</td>
+              <td>${call[2]}</td>
+              <td>${call[3]}</td>
+              <td>${call[4]}</td>
+              <td>
+                <a href="${tg.url('/callRespondPage', {'callId': call[5]})}"
+                  >Respond</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callDashboard">
+        <h2>Providers Calls Dashboard (${proCount})</h2>
+        <table style="width: 100%" border="1">
+          <thead bgcolor="#809BCE">
+            <tr>
+              <th>Provider's Email</th>
+              <th>Organization Name</th>
+              <th>Date Reported</th>
+              <th>Emergency Description</th>
+              <th>Address</th>
+              <th>Status</th>
+              <th>Respond</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 400">
+            <tr py:for="call in proCalls">
+              <td>${call[0]}</td>
+              <td>${call[1]}</td>
+              <td>${call[2]}</td>
+              <td>${call[3]}</td>
+              <td>${call[4]}</td>
+              <td>${call[5]}</td>
+              <td>
+                <a href="${tg.url('/callRespondPage', {'callId': call[6]})}"
+                  >Respond</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chat-container">
+        <div>
+          <div class="msg-header">
+            <div class="container1">
+              <h2 class="chat">${municipality_name} Chat</h2>
+            </div>
+          </div>
+          <div class="chat-page">
+            <!-- padding, separates header from the rest-->
+            <div class="msg-inbox">
+              <!-- border/overflow, separates header from the rest-->
+
+              <div class="chats">
+                <!-- separates middle chat box from bottom/type section-->
+                <div class="msg-page">
+                  <!-- further separates middle chat box from bottom/type section-->
+                  <div class="forloop" py:for="mchat in municipalitychats">
+                    <py:if test="mchat.municipality == municipality_name">
+                      <py:if test="mchat.user_email!=user_email">
+                        <div class="received-msg-box">
+                          <div class="received-msg">
+                            <p>${mchat.chat}</p>
+                            <span class="time">${mchat.user_email}</span>
+                            <span class="time">${mchat.date_time}</span>
+                          </div>
+                          <!-- received msg box enddiv-->
+                        </div> </py:if
+                      ><py:else>
+                        <div class="outgoing-msg-box">
+                          <div class="outgoing-msg">
+                            <p>${mchat.chat}</p>
+                            <span class="time">${mchat.user_email}</span>
+                            <span class="time">${mchat.date_time}</span>
+                          </div>
+                        </div>
+                      </py:else>
+                    </py:if>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-type">
+                <div class="input-group">
+                  <form
+                    id="municipalitySubmit"
+                    action="${tg.url('/chatSubmit', {'municipalityName': municipality_name})}"
+                    method="POST"
+                  >
+                    <br />
+                    <textarea
+                      id="municipalitySubmit"
+                      name="municipalitySubmit"
+                      rows="2"
+                      cols="60"
+                      placeholder="Write message..."
+                      class="form-control"
+                    ></textarea>
+                    <input
+                      type="submit"
+                      name="msend"
+                      value="Send"
+                      class="chatsubmit"
+                    />
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="callDashboard">
+        <h2>Relief Hubs Dashboard</h2>
+        <table style="width: 100%" border="1">
+          <thead bgcolor="#809BCE">
+            <tr>
+              <th>Organization Name</th>
+              <th>Municipality</th>
+              <th>Address</th>
+              <th>Description</th>
+              <th>Capacity</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 400">
+            <tr py:for="call in hubList">
+              <td>${call[0]}</td>
+              <td>${call[1]}</td>
+              <td>${call[3]}, ${call[2]}</td>
+              <td>${call[4]}</td>
+              <td>${call[5]}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </body>
+</html>
