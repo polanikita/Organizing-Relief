@@ -84,6 +84,7 @@ class MunicipalityChats(Base):
 
 
 
-db_url = 'postgresql://postgres:Montegod111!!!@localhost:5432/OrganizingReliefeSignUp'
+db_url = 'postgres://yourDBUsername:yourDBpassword@localhost:yourPort/yourDBname'
+
 engine = create_engine(db_url)
 Base.metadata.create_all(bind=engine)
